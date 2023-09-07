@@ -1,10 +1,10 @@
-mod comms;
 mod client;
+mod comms;
 mod server;
-mod ssh;
-mod shm;
-mod sync;
 mod servicer;
+mod shm;
+mod ssh;
+mod sync;
 
 pub use sync::*;
 
@@ -46,44 +46,42 @@ impl Args {
     }
 }
 
-/// thinking about not_rsync as a library
-// fn remote_sshync () -> anyhow::Result<()> {
-//     let snc = sshync::SshClient::new(); // returns a sync ssh connection
-//
-//     let sync_args = sshync::Args::default().verbose().backups().quiet();
-//
-//     snc.sync(file1, file2)?; // should be blocking or async?
-//     snc.sync_dir(dir1, dir2)?;
-// }
-//
-// fn sync_some_directories () -> anyhow::Result<()> {
-//     let sshync_ssh = sshync::ShmClient::new();
-//
-//     let file_sync_args = sshync::args::default().
-//
-//     nrb.sync(file1, file2, args)?;
-//     nrb.sync_dir(dir1, dir2, args)?;
-// }
-
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use test_files::TestFiles;
+    use std::fs;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn init() {
+        let _ = env_logger::builder().is_test(true).try_init();
     }
 
     #[test]
-    fn create_client_cant_req() {
+    fn test_shm_simple() {
+        init();
+
+        let (file1, contents1) = ("a.txt", "this is a base file");
+        let (file2, contents2) = ("b.txt", "this is a modified file");
+
+        let temp_dir = TestFiles::new();
+        temp_dir.file(file1, contents1).file(file2, contents2);
+
+        let fp1 = temp_dir.path().join(file1);
+        let fp2 = temp_dir.path().join(file2);
+
+        log::info!("file 2 start: {}", fs::read_to_string(fp2.clone()).unwrap());
+        assert_ne!(
+            fs::read_to_string(fp1.clone()).unwrap(),
+            fs::read_to_string(fp2.clone()).unwrap()
+        );
+
         let mut snc = crate::Sshync::from_shm();
-        let sync_args = crate::Args::default();
+        snc.sync(fp1.to_str().unwrap(), fp2.to_str().unwrap(), None).unwrap();
 
-        let file1 = "/home/knara/dev/rust/sshync/tests/test_files/a.txt";
-        let file2 = "/home/knara/dev/rust/sshync/tests/test_files/b.txt";
-
-        snc.sync(file1, file2, sync_args).unwrap();
+        log::info!("file 2 end: {}", fs::read_to_string(fp2.clone()).unwrap());
+        assert_eq!(
+            fs::read_to_string(fp1).unwrap(),
+            fs::read_to_string(fp2).unwrap()
+        );
     }
 
     #[test]
@@ -94,6 +92,6 @@ mod tests {
         let file1 = "/home/knara/dev/rust/sshync/tests/test_files/a.txt";
         let file2 = "/home/knara/dev/rust/sshync/tests/test_files/b.txt";
 
-        snc.sync(file1, file2, sync_args).unwrap();
+        snc.sync(file1, file2, Some(sync_args)).unwrap();
     }
 }

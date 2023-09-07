@@ -1,12 +1,12 @@
 //! Utils for the server, whether on a remote machine (SSH), or an adjacent thread for local transport.
 
-use crate::server::Server;
 use crate::comms::*;
+use crate::server::Server;
 use anyhow::Result;
 use fast_rsync::{apply, Signature, SignatureOptions};
+use log::{error, info};
 use std::fs::{File, OpenOptions};
 use std::io::{prelude::*, SeekFrom};
-use log::{error, info};
 
 pub struct Servicer<'a, T>
 where
@@ -43,8 +43,7 @@ where
                 client_message::Message::ShutdownRequest(_) => {
                     info!("shutdown request");
                     shutdown = true;
-                    self.server
-                        .send(bincode::serialize(&ShutdownRequest{})?)?;
+                    self.server.send(bincode::serialize(&ShutdownRequest {})?)?;
                 }
             };
         }
@@ -53,16 +52,14 @@ where
     }
 
     fn get_file_signatures(&self, req: SignatureRequest) -> Result<SignatureResponse> {
-        let mut res = SignatureResponse {
-            signatures: vec![]
-        };
+        let mut res = SignatureResponse { signatures: vec![] };
 
         // parallelize
         for fp in req.filepaths.into_iter() {
             info!("calculating signature for {}", fp);
-            let mut sig: FileSignature = FileSignature {
+            let sig: FileSignature = FileSignature {
                 filepath: fp.clone(),
-                content: Self::calculate_signature(fp, None)?.serialized().to_vec()
+                content: Self::calculate_signature(fp, None)?.serialized().to_vec(),
             };
             res.signatures.push(sig);
         }

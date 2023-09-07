@@ -1,6 +1,6 @@
 use crate::{client::Client, server::Server, servicer::Servicer};
-use std::thread;
 use std::sync::mpsc;
+use std::thread;
 use std::time::Duration;
 
 pub struct ShmClient {
@@ -10,7 +10,7 @@ pub struct ShmClient {
 }
 
 impl ShmClient {
-    pub fn new() -> ShmClient {
+    pub fn init() -> ShmClient {
         let (p_send, c_recv) = mpsc::channel::<Vec<u8>>();
         let (c_send, p_recv) = mpsc::channel::<Vec<u8>>();
 
@@ -18,7 +18,6 @@ impl ShmClient {
             let mut local_server = ShmServer::new(c_send, c_recv);
             local_server.run().unwrap();
         });
-
 
         ShmClient {
             server_t: Some(server_t),
@@ -40,6 +39,8 @@ impl Client for ShmClient {
                     String::from_utf8(response.to_vec())
                         .unwrap_or("response can't be decoded".to_string())
                 );
+
+                log::trace!("returning after client got response");
                 return Ok(response);
             }
             _ => {
@@ -50,6 +51,13 @@ impl Client for ShmClient {
                 }
             }
         }
+    }
+}
+
+impl Drop for ShmClient {
+    fn drop(&mut self) {
+        log::info!("server dropping ShmClient, joining server thread");
+        // self.server_t.take().unwrap().join().expect("failed to join server thread.");
     }
 }
 

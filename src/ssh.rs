@@ -8,9 +8,7 @@ pub struct SshClient {
 }
 
 impl SshClient {
-    pub fn from_session(session: ssh2::Session) -> Self {
-
-
+    pub fn init_from_session(session: ssh2::Session) -> Self {
         Self {
             session,
             server_session_channel: None,
