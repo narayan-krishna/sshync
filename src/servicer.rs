@@ -1,7 +1,7 @@
 //! Utils for the server, whether on a remote machine (SSH), or an adjacent thread for local transport.
 
 use crate::comms::*;
-use crate::server::Server;
+use crate::Server;
 use anyhow::Result;
 use fast_rsync::{apply, Signature, SignatureOptions};
 use log::{error, info};

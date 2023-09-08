@@ -1,6 +1,6 @@
 # sshync (wip)
 
-sshync is a library for embedding remote file synchronization directly into your Rust workflow.
+sshync is a small library for embedding remote file synchronization directly into Rust. Specifically, it exposes a `Sshync` struct, which can be used to sync remote and local files, depending on method of initialization.
 
 **over SSH**
 ```rust

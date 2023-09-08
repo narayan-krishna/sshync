@@ -1,4 +1,4 @@
-use crate::client::Client;
+use crate::Client;
 use crate::comms::*;
 use crate::Args;
 use fast_rsync;
@@ -11,21 +11,12 @@ pub struct Sshync {
 }
 
 impl Sshync {
-    pub fn from_shm() -> Self {
+    pub fn init(client: Box<dyn Client>, default_args: Option<Args>) -> Self {
         log::info!("running shared memory client");
         Self {
-            client: Box::new(crate::shm::ShmClient::init()),
-            default_args: None,
+            client,
+            default_args,
         }
-    }
-
-    pub fn from_ssh() -> Self {
-        todo!()
-        // log::info!("running shared memory client");
-        // Self {
-        //     client: Box::new(crate::ssh::SshClient::init_from_session()), // TODO: change to ssh
-        //     default_args: None,
-        // }
     }
 
     pub fn default_args(mut self, args: Args) -> Self {
@@ -69,7 +60,6 @@ impl Sshync {
             message: client_message::Message::SignatureRequest(req),
         };
 
-        // as_proto::<SignatureResponse>(client.request_from_proto(client_msg)?)
         let response_bytes: Vec<u8> = self.client.request(bincode::serialize(&client_msg)?)?;
         let response: SignatureResponse =
             bincode::deserialize::<SignatureResponse>(&response_bytes)?;
