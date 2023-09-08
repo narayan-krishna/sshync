@@ -1,17 +1,17 @@
 mod client_server;
 
-use super::common;
-use sshync::Sshync;
+use super::{init, simple_testfile_setup};
 use client_server::ShmClient;
+use sshync::{Sshync, Args};
 use std::fs;
 use test_files::TestFiles;
 
 #[test]
 fn test_shm_simple() {
-    common::init();
+    init();
 
     let mut test_files = TestFiles::new();
-    let (fp1, fp2) = common::simple_testfile_setup(&mut test_files);
+    let (fp1, fp2) = simple_testfile_setup(&mut test_files);
 
     let client = Box::new(ShmClient::init());
 

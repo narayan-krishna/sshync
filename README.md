@@ -1,43 +1,51 @@
-# sshync (wip)
+# sshync
 
-sshync is a small library for embedding remote file synchronization directly into Rust. Specifically, it exposes a `Sshync` struct, which can be used to sync remote and local files, depending on method of initialization.
+sshync is a file synchronization service library built on `fast_rsync`. sshync wraps around an existing bidirectional byte-level read-write protocol between a client and a server.
 
-**over SSH**
+## Usage
+
+1. Implement byte-level read/write functionality in sshync `Client` and `Server` for your client/server.
+
 ```rust
-    use sshync::{Sshync, Args};
-
-    fn main() -> Result<()> {
-        let mut sc = Sshync::from_ssh();
-        let sync_args = Args::default().verbose(true).backup(true);
-
-        let file1 = "/home/knara/dev/rust/sshync/tests/test_files/a.txt";
-        let file2 = "/home/knara/dev/rust/sshync/tests/test_files/b.txt";
-
-        sc.sync(file1, file2, sync_args).unwrap();
-
-        Ok(())
+// my_server.rs
+impl sshync::Server for MyServer {
+    fn send(&mut self, response: Vec<u8>) -> anyhow::Result<()> {
+        // implement server send
     }
+
+    fn receive(&mut self) -> anyhow::Result<Vec<u8>> {
+        // implement server receive
+    }
+}
+
+// my_client.rs
+impl sshync::Client for MyClient {
+    fn request(&mut self, request: Vec<u8>) -> anyhow::Result<Vec<u8>> {
+        // implement client request-response
+    }
+}
 ```
 
-**over Shm**
+2. Run your server, assuming it's ready to make send/recv calls.
 ```rust
-    use sshync::{Sshync, Args};
+// my_server.rs 
 
-    fn main() -> Result<()> {
-        let mut snc = Sshync::from_shm();
-        let sync_args = Args::default();
-
-        let file1 = "/home/knara/dev/rust/sshync/tests/test_files/a.txt";
-        let file2 = "/home/knara/dev/rust/sshync/tests/test_files/b.txt";
-
-        snc.sync(file1, file2, sync_args)?;
-        snc.sync(file1, file2, sync_args)?;
-
-        Ok(())
-    }
+let mut server = RemoteServer::new(tcp_stream);
+server.run().unwrap();
 ```
 
-### TODO
+3. Sync files to and from your server through a `Sshync` object, with custom configurations supplied through `Args`.
+
+```rust
+// my_client.rs
+let client = Box::new(ShmClient::init());
+let default_args = Args::default().quiet().backup().recursive();
+
+let mut snc = Sshync::init(client, default_args);
+snc.sync("my_file.txt", "not_my_file.txt", None)?;
+```
+
+## TODO
 - [ ] implement atomicity with temp files
 - [ ] more robust integration and unit testing
 - [ ] performance measurement (criterion)

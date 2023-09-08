@@ -1,12 +1,12 @@
 //! Sshync is a libary quickly implementing delta-compression file synchronization for any client-server
 //! that can send and receive bytes.
 
+mod comms;
 mod servicer;
 mod sync;
-mod comms;
 
-pub use sync::Sshync;
 pub use servicer::Servicer;
+pub use sync::Sshync;
 
 pub trait Client {
     fn request(&mut self, request: Vec<u8>) -> anyhow::Result<Vec<u8>>;

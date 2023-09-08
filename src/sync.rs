@@ -1,6 +1,6 @@
-use crate::Client;
 use crate::comms::*;
 use crate::Args;
+use crate::Client;
 use fast_rsync;
 use std::fs::File;
 use std::io::prelude::*;
