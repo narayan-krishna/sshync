@@ -1,5 +1,0 @@
-mod msg;
-
-fn main() {
-
-}
