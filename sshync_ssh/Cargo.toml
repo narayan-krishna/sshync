@@ -6,5 +6,19 @@ authors.workspace = true
 description.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "client"
+path = "src/bin/client.rs"
+
+[[bin]]
+name = "ssh_server"
+path = "src/bin/ssh_server.rs"
 
 [dependencies]
+anyhow = "1.0.75"
+chrono = "0.4.30"
+clap = { version = "4.4.2", features = ["derive"] }
+env_logger = "0.10.0"
+log = "0.4.20"
+ssh2 = "0.9.4"
+sshync_lib = { path = "../sshync_lib" }

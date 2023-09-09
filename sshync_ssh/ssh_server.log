@@ -1,0 +1,78 @@
+warning: /home/knara/dev/rust/sshync/sshync_lib/Cargo.toml: dependency (serde) specified without providing a local path, Git repository, version, or workspace dependency to use. This will be considered an error in future versions
+warning: /home/knara/dev/rust/sshync/sshync_lib/Cargo.toml: unused manifest key: dependencies.serde.verson
+   Compiling sshync_lib v0.1.0 (/home/knara/dev/rust/sshync/sshync_lib)
+warning: unreachable expression
+  --> sshync_lib/src/sync.rs:51:9
+   |
+50 |         return Ok(());
+   |         ------------- any code following this expression is unreachable
+51 |         unimplemented!()
+   |         ^^^^^^^^^^^^^^^^ unreachable expression
+   |
+   = note: `#[warn(unreachable_code)]` on by default
+   = note: this warning originates in the macro `unimplemented` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unused variable: `args`
+  --> sshync_lib/src/sync.rs:31:9
+   |
+31 |         args: Option<Args>,
+   |         ^^^^ help: if this is intentional, prefix it with an underscore: `_args`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `args`
+  --> sshync_lib/src/sync.rs:45:28
+   |
+45 |     pub fn sync_dir(&self, args: Args) -> anyhow::Result<()> {
+   |                            ^^^^ help: if this is intentional, prefix it with an underscore: `_args`
+
+warning: unused variable: `filepath`
+  --> sshync_lib/src/sync.rs:49:35
+   |
+49 |     fn verify_src_filepath(&self, filepath: &str) -> anyhow::Result<()> {
+   |                                   ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_filepath`
+
+warning: function `read_message_len_header` is never used
+ --> sshync_lib/src/msg.rs:4:8
+  |
+4 | pub fn read_message_len_header<T>(buf: &mut T) -> Result<u32>
+  |        ^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `read_message` is never used
+  --> sshync_lib/src/msg.rs:16:8
+   |
+16 | pub fn read_message<T>(buf: &mut T, message_len: usize) -> Result<Vec<u8>>
+   |        ^^^^^^^^^^^^
+
+warning: function `write_message_len` is never used
+  --> sshync_lib/src/msg.rs:26:8
+   |
+26 | pub fn write_message_len<T>(buf: &mut T, message: &Vec<u8>) -> Result<()>
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `write_message` is never used
+  --> sshync_lib/src/msg.rs:36:8
+   |
+36 | pub fn write_message<T>(buf: &mut T, message: Vec<u8>) -> Result<()>
+   |        ^^^^^^^^^^^^^
+
+   Compiling sshync_ssh v0.1.0 (/home/knara/dev/rust/sshync/sshync_ssh)
+warning: `sshync_lib` (lib) generated 8 warnings (run `cargo fix --lib -p sshync_lib` to apply 3 suggestions)
+    Finished dev [unoptimized + debuginfo] target(s) in 2.85s
+     Running `target/debug/ssh_server`
+[2023-09-09T05:15:14Z INFO  ssh_server] 2023-09-08T22:15:14.241293667-07:00
+[2023-09-09T05:15:14Z INFO  ssh_server] starting server
+[2023-09-09T05:15:14Z INFO  ssh_server] server is up and running at 50051!
+[2023-09-09T05:15:14Z INFO  ssh_server] received a connection from 127.0.0.1:40870!
+[2023-09-09T05:15:14Z INFO  sshync_lib] attempting to handle connection...
+[2023-09-09T05:15:14Z INFO  sshync_lib::servicer] proceeding to handler
+[2023-09-09T05:15:14Z INFO  sshync_lib::servicer] signature request
+[2023-09-09T05:15:14Z INFO  sshync_lib::servicer] calculating signature for /home/knara/dev/rust/sshync/sshync_ssh/tests/b.txt
+[2023-09-09T05:15:14Z INFO  sshync_lib::servicer] patch request
+[2023-09-09T05:15:14Z INFO  sshync_lib::servicer] attempting to patch /home/knara/dev/rust/sshync/sshync_ssh/tests/b.txt with [114, 115, 2, 54, 69, 0, 8, 8, 97, 32, 98, 97, 115, 101, 32, 102, 69, 20, 4, 0]
+[2023-09-09T05:15:14Z INFO  sshync_lib::servicer] shutdown request
+[2023-09-09T05:15:14Z INFO  sshync_lib] finished handling connection...
+[2023-09-09T05:15:15Z INFO  ssh_server] found a connection after the timouet. nice!
+[2023-09-09T05:15:15Z INFO  ssh_server] shutting down

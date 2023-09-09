@@ -12,7 +12,7 @@ pub struct Sshync {
 
 impl Sshync {
     pub fn init(client: Box<dyn Client>, default_args: Option<Args>) -> Self {
-        log::info!("running shared memory client");
+        log::info!("creating sshync from client");
         Self {
             client,
             default_args,
