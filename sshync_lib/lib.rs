@@ -4,6 +4,7 @@
 mod comms;
 mod servicer;
 mod sync;
+mod msg;
 
 pub use servicer::Servicer;
 pub use sync::Sshync;

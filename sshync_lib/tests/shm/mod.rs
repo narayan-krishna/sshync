@@ -2,7 +2,7 @@ mod client_server;
 
 use super::{init, simple_testfile_setup};
 use client_server::ShmClient;
-use sshync::{Sshync, Args};
+use sshync_lib::{Sshync, Args};
 use std::fs;
 use test_files::TestFiles;
 
