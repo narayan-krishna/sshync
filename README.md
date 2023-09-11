@@ -58,5 +58,5 @@ and more.
 
 #### Links
 - [the rsync algorithm](https://www.andrew.cmu.edu/course/15-749/READINGS/required/cas/tridgell96.pdf)
-- [rsync thesis](https://www.samba.org/~tridge/phd_thesis.pdf)
+- [rsync thesis paper](https://www.samba.org/~tridge/phd_thesis.pdf)
 
